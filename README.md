@@ -201,3 +201,10 @@ Now to make sure that, so far, everything is set up correctly, open the [Cloudfl
 If the below is seen, then *Authelia* is now a gateway for your *Cloudflare*'s selected domains for 2FA authentication. Otherwise, re-check what have you missed from this guide, as it is 100% guaranteed if followed as is, the integration will be successful.
 
 ![openid test](/screenshots/cloudflare/openid_test.png)
+
+
+
+
+
+## License
+This document guide is licensed under the CC0 1.0 Universal license. The terms of the license are detailed in [LICENSE](/LICENSE)
