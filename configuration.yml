@@ -83,6 +83,16 @@ session:
     host: redis
     port: 6379
 
+access_control:
+  default_policy: deny
+  networks:
+    - name: docker
+      networks:
+         - 172.18.0.0/16
+    - name: local
+      networks:
+         - 192.168.1.0/24
+
 identity_providers:
   oidc:
     hmac_secret: thisiSaduMMY2String3u1SEDasasA2mP92es0E43crEtD84AT2Af8oRy3OU53AA
