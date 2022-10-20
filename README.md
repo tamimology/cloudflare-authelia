@@ -149,7 +149,7 @@ An output string will be shown on the terminal window, also copy that and keep i
 
 In case of an existing "*configuration.yml*" file is available in the Authelia folder, make a backup copy of that, or simply download the sample one from [here](/configuration.yml) and make sure to change all CAPITALISED parameters to match your setup
 
-As a quick summary, just delete the part for the "*access_control:*", and keep the rest untouched. Also make sure that you change all "*URLs*" from the previous one to the Cloudflare's ones, i.e. from "*DuckDNS*"
+As a quick summary, just delete the "*rules:*" part under the "*access_control:*", and keep the rest untouched. Also make sure that you change all "*URLs*" from the previous one to the Cloudflare's ones, i.e. from "*DuckDNS*"
 
 Considering the team's name in Clkoudflare is named as "***myteam***", then, we need to add the following at the end of the file:
 
