@@ -75,6 +75,13 @@ Click on **Save**
 ![openid connect](/screenshots/cloudflare/openid_connect.png)
 
 
+Before leaving the **Cloudflare** platform and moving to the **Authelia** part, take note of the **Cloudflare** ***team*** name, and have it saved somewhere safe for later use. To do that, click on **Settings** on the left side list, then choose **General**. On the top right side, you will see the team name in the format *myteam.cloudflareaccess.com*. So, in this case, it will be only ***myteam**
+
+
+
+![cf team](/screenshots/cloudflare/cf-team.png)
+
+
 ## Adding Applications Rules and Policies
 
 #### This is where you define for each subdomain, if Authelia is needed to be an intermediate gate between the Cloudflare Tunnel and the final URL requested
