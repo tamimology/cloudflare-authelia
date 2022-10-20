@@ -77,7 +77,7 @@ session:
   secret: SoMe1StRiNg2GoEs3In4HeRe
   expiration: 3600 # 1 hour
   inactivity: 7200 # 2 hours
-  domain: MYDOAMAIN>COM # Needs to be root domain
+  domain: MYDOAMAIN.COM # Needs to be root domain
   same_site: lax
   redis:
     host: redis
@@ -85,7 +85,7 @@ session:
 
 identity_providers:
   oidc:
-    hmac_secret: szypeJnrhIQJ9Iczhyn9p1YFGxrmzZ1lX81erOP88koUiD78PF4Zc8vMw1VG24HS
+    hmac_secret: thisiSaduMMY2String3u1SEDasasA2mP92es0E43crEtD84AT2Af8oRy3OU53AA
     issuer_private_key: 
       -----BEGIN RSA PRIVATE KEY-----
       private.pem CONTENTS TO BE INSERTED HERE
