@@ -90,7 +90,7 @@ On the left side, click on **Access**, then choose **Applications**, then click 
 
 ![add application](/screenshots/cloudflare/add_application.png)
 
-In the **Configure app** screen, give the applicaiton a name, i.e. "***Portainer-CE***". Choose subdomain, i.e. "***portainer***", and choose your domain, which we agreed on to be ***mydomain.com***. You can change the application logo if needed, or just keep the *Default* one. Click on **Next** on the top right.
+In the **Configure app** screen, give the application a name, i.e. "***Portainer-CE***". Choose subdomain, i.e. "***portainer***", and choose your domain, which we agreed on to be ***mydomain.com***. You can change the application logo if needed, or just keep the *Default* one. Click on **Next** on the top right.
 
 In the **Add policies** screen, give this policy a name, i.e. "***portainer_auth_policy***". In the **Action**, select the "***Allow***", and duration make it "***1 month***".
 Then in **Configure rules**, set the **Selector** to "***Login Methods***", and the **Value**, choose the "***OpenID Connect Authelia***" option and click on **Next** on the top right.
@@ -110,6 +110,7 @@ Now from there, click on **Create transform rule** and choose the **Modify Reque
 ![transform rules](/screenshots/cloudflare/transform_rules.png)
 
 Give the rule a name, i.e. "***Authelia***". In the "***Field***", choose the "*X-Forwarded-For*" option, "***Operator***" to be "*does not equal*", and leave the "***Value***" as *blank*
+
 Add another Rule by clicking on the "**And**", and In the "***Field***", choose the "*IP Source Address*" option, "***Operator***" to be "*is not in*", and in the "***Value***", enter the locally hosted ***Cloudflare Tunnel Container IP address***.
 Below, in the **Then...** part, choose "***Remove***", and in the "***Header name***", enter "*X-Forwarded-For*" and click on **Save**
 
@@ -192,7 +193,7 @@ identity_providers:
         userinfo_signing_algorithm: none
 ```
 
-Now, restart Authelia container and make sure that no errors are in the logs. If this is successfull, it is time now to test the integration from **Cloudflare**.
+Now, restart Authelia container and make sure that no errors are in the logs. If this is successful, it is time now to test the integration from **Cloudflare**.
 
 
 ## Testing The Integration Setup
