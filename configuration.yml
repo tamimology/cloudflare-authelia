@@ -92,6 +92,12 @@ access_control:
     - name: local
       networks:
          - 192.168.1.0/24
+  rules:
+    ## bypass rule
+    - domain: 
+        - "auth.MYDOAMAIN.COM"
+      policy: bypass
+
 
 identity_providers:
   oidc:
