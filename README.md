@@ -11,6 +11,7 @@
 2. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
 3. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
 4. <a href="#modifying-proxies-and-fowarded-headers">Modifying Proxies and Fowarded-headers</a>
+5. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
 
 
 ***Second, we move to Authelia self-hosted***
@@ -115,6 +116,36 @@ Add another Rule by clicking on the "**And**", and In the "***Field***", choose 
 Below, in the **Then...** part, choose "***Remove***", and in the "***Header name***", enter "*X-Forwarded-For*" and click on **Save**
 
 ![proxy header](/screenshots/cloudflare/proxy_header.png)
+
+## Adding Firewall Rules
+
+#### What we need now is to allow specific countries to access the domain, and block all other countries to avoid external attacks.
+
+In the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **Security** from the *Home* screen, then choose **WAF**. On the right side, click on ***Create firewall rule***.
+
+
+![waf](/screenshots/cloudflare/waf.png)
+
+Follow the steps as below:
+1. Enter the desired Rule Name
+2. Choose *"Continent"* from the **Field** list, **Operator** to be *"equals"*, and then choose the first option in the **Value** list. Do this step for all items in the **"Value"** list by choosing the *"Or"* next to each rule line
+3. Choose the *"Block"* from **action**
+
+![waf_rule](/screenshots/cloudflare/waf-rule.png)
+
+By doing this, you have blocked all countries to accessing your domain.
+
+
+Now, you need to unblock your country (or more than one if needed).
+
+After you have added all continents as block, check your desired country is in which continent, i.e. Cyprus, which is in Europe. You go to the Europe option you have added, and then click on **And**, then choose *"Country"* from the **Field** list, **Operator** to be *"does not equals"*, and then choose *"Cyprus"* from the **Value** list.
+
+Click on **Deploy firewall rule** at the bottom of the page
+
+Your final result shoul look like below
+
+![final_waf](/screenshots/cloudflare/final-waf.png)
+
 
 
 ## Generating Secrets and OpenID Issuer Private Key
