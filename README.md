@@ -147,6 +147,11 @@ Your final result shoul look like below
 ![final_waf](/screenshots/cloudflare/final-waf.png)
 
 
+###### In case you have Home Assistant installed, and have the Google Home Devices integrated with it, you need to allow Google to bypass the firewall rule. In order to do that, with the **North America** rule, add an **And** rule, then choose *"AS Num"* from the **Field** list, **Operator** as *"does not equal"* and set the **Value** to *"15169"*
+
+
+###### In case you have MariaDB installed, you need to allow it to bypass the firewall rule. In order to do that, with the **North America** rule, add an **And** rule, then choose *"AS Num"* from the **Field** list, **Operator** as *"does not equal"* and set the **Value** to *"396982"*
+
 
 ## Generating Secrets and OpenID Issuer Private Key
 
