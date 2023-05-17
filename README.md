@@ -121,7 +121,7 @@ Below, in the **Then...** part, choose "***Remove***", and in the "***Header nam
 
 #### What we need now is to allow specific countries to access the domain, and block all other countries to avoid external attacks.
 
-In the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **Security** from the *Home* screen, then choose **WAF**. On the right side, click on ***Create firewall rule***.
+In the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **Security** from the *Home* screen, then choose **WAF**. On the right side, click on ***Create rule***.
 
 
 ![waf](/screenshots/cloudflare/waf.png)
