@@ -30,14 +30,14 @@ regulation:
 
 storage:
   encryption_key: SoMe1StRiNg2GoEs3In4HeRe
-  mysql:
-    host: mariadb
-    port: 3306
-    database: autheliadb
-    username: authelia
-    password: PASSWORD
-  # local:
-  #   path: /config/db.sqlite3
+  # mysql:
+  #   host: mariadb
+  #   port: 3306
+  #   database: autheliadb
+  #   username: authelia
+  #   password: PASSWORD
+  local:
+    path: /config/db.sqlite3
 
 jwt_secret: SoMe1StRiNg2GoEs3In4HeRe
 
@@ -60,6 +60,17 @@ notifier:
   disable_startup_check: true
 #  filesystem:
 #    filename: /config/notification.txt
+  smtp: #https://support.google.com/accounts/answer/185833?hl=en
+    host: smtp.gmail.com
+    port: 465
+    timeout: 5s
+    disable_require_tls: true
+    disable_html_emails: false
+    username: USERNAME@gmail.com
+    password: PASSWORD
+    sender: "My Authentication Service <noreply@auth.MYDOMAIN.com>"
+    subject: "[2FA] {title}"
+    startup_check_address: noreply@auth.MYDOMAIN.com
 
 authentication_backend:
   password_reset.disable: false
