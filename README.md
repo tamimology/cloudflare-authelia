@@ -1,6 +1,6 @@
 # Cloudflare Tunnel Login Using Self-hosted Authelia
 
-#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.36.9](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2022.10.2](https://github.com/cloudflare/cloudflared)*
+#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.37.5](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2023.10.0](https://github.com/cloudflare/cloudflared)*
 
 
 # Table of Contents
@@ -10,8 +10,7 @@
 1. <a href="#generating-service-tokens">Generating Service Tokens</a>
 2. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
 3. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
-4. <a href="#modifying-proxies-and-fowarded-headers">Modifying Proxies and Fowarded-headers</a>
-5. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
+4. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
 
 
 ***Second, we move to Authelia self-hosted***
@@ -76,7 +75,7 @@ Click on **Save**
 ![openid connect](/screenshots/cloudflare/openid_connect.png)
 
 
-Before leaving the **Cloudflare** platform and moving to the **Authelia** part, take note of the **Cloudflare** ***team*** name, and have it saved somewhere safe for later use. To do that, click on **Settings** on the left side list, then choose **General**. On the top right side, you will see the team name in the format *myteam.cloudflareaccess.com*. So, in this case, it will be only ***myteam**
+Before leaving the **Cloudflare** platform and moving to the **Authelia** part, take note of the **Cloudflare** ***team*** name, and have it saved somewhere safe for later use. To do that, click on **Settings** on the left side list, then choose **Custom Pages**. On the top right side, you will see the team name in the format *myteam.cloudflareaccess.com*. So, in this case, it will be only ***myteam**
 
 
 
@@ -100,22 +99,6 @@ In the **Setup** screen, leave everything as is, and click on **Add application*
 
 
 ![application access](/screenshots/cloudflare/application_access.png)
-
-
-## Modifying Proxies and Fowarded-headers
-#### Cloudflare, bu defualt, adds the *X-Forwarded-For* header, or it appends another IP, depending if this header is originally there during the request or not. Therefore, this has to be modified to remove the IP address so that the client sending this request will not be able to forge that remote IP address with any of the most accepted remote IP headers.
-
-Now, go back to the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **domain** from the *Home* screen. On the left list, scroll down till you find the **Rules**, expand it and choose **Transform Rules** from the drop list. 
-Now from there, click on **Create transform rule** and choose the **Modify Request Header**
-
-![transform rules](/screenshots/cloudflare/transform_rules.png)
-
-Give the rule a name, i.e. "***Authelia***". In the "***Field***", choose the "*X-Forwarded-For*" option, "***Operator***" to be "*does not equal*", and leave the "***Value***" as *blank*
-
-Add another Rule by clicking on the "**And**", and In the "***Field***", choose the "*IP Source Address*" option, "***Operator***" to be "*is not in*", and in the "***Value***", enter the locally hosted ***Cloudflare Tunnel Container IP address***.
-Below, in the **Then...** part, choose "***Remove***", and in the "***Header name***", enter "*X-Forwarded-For*" and click on **Save**
-
-![proxy header](/screenshots/cloudflare/proxy_header.png)
 
 ## Adding Firewall Rules
 
