@@ -5,8 +5,10 @@
 theme: grey
 
 server:
-  host: 0.0.0.0
-  port: 9091 # if you need this changed make sure it reflects also in the docker-compose.yml
+  address: tcp://0.0.0.0:9091/
+  buffers:
+    read: 8192
+    write: 8192
 
 log:
   level: info
@@ -39,7 +41,11 @@ storage:
   local:
     path: /config/db.sqlite3
 
-jwt_secret: SoMe1StRiNg2GoEs3In4HeRe
+identity_validation:
+  reset_password:
+    jwt_lifespan: '5 minutes'
+    jwt_algorithm: 'HS256'
+    jwt_secret: 'SoMe1StRiNg2GoEs3In4HeRe'
 
 default_redirection_url: https://auth.MYDOMAIN.COM
 
@@ -61,8 +67,7 @@ notifier:
 #  filesystem:
 #    filename: /config/notification.txt
   smtp: #https://support.google.com/accounts/answer/185833?hl=en
-    host: smtp.gmail.com
-    port: 465
+    address: submissions://smtp.gmail.com:465
     timeout: 5s
     disable_require_tls: true
     disable_html_emails: false
@@ -88,14 +93,17 @@ session:
   secret: SoMe1StRiNg2GoEs3In4HeRe
   expiration: 3600 # 1 hour
   inactivity: 7200 # 2 hours
-  domain: MYDOAMAIN.COM # Needs to be root domain
+  remember_me: 1M # Setting this to -1 disables this feature entirely.
   same_site: lax
+  cookies:
+    - domain: MYDOAMAIN.com # Needs to be root domain
+      authelia_url: https://auth.MYDOAMAIN.com
+      default_redirection_url: https://www.MYDOAMAIN.com
   redis:
     host: redis
     port: 6379
 
 access_control:
-  default_policy: deny
   networks:
     - name: docker
       networks:
@@ -106,21 +114,25 @@ access_control:
   rules:
     ## bypass rule
     - domain: 
-        - "auth.MYDOAMAIN.COM"
+        - "auth.MYDOAMAIN.com"
       policy: bypass
 
 
 identity_providers:
   oidc:
     hmac_secret: thisiSaduMMY2String3u1SEDasasA2mP92es0E43crEtD84AT2Af8oRy3OU53AA
-    issuer_private_key: 
-      -----BEGIN RSA PRIVATE KEY-----
-      private.pem CONTENTS TO BE INSERTED HERE
-      -----END RSA PRIVATE KEY-----
-    access_token_lifespan: 1h
-    authorize_code_lifespan: 1m
-    id_token_lifespan: 1h
-    refresh_token_lifespan: 90m
+    jwks:
+      - key_id: 'example'
+        algorithm: 'RS256'
+        use: 'sig'
+        key: | # docker run -u 1036:100 -v /volume1/docker:/keys authelia/authelia:latest authelia crypto pair rsa generate --bits 4096 --directory /keys
+          -----BEGIN RSA PRIVATE KEY-----
+          private.pem CONTENTS TO BE INSERTED HERE
+          -----END RSA PRIVATE KEY-----
+    lifespans.access_token: 1h
+    lifespans.authorize_code: 1m
+    lifespans.id_token: 1h
+    lifespans.refresh_token: 90m
     enable_client_debug_messages: false
     enforce_pkce: public_clients_only
     cors:
@@ -132,10 +144,10 @@ identity_providers:
       allowed_origins:
         - "*"
       allowed_origins_from_client_redirect_uris: false
-    clients:
-      - id: CF-Access-Client-Id TOKEN
-        description: Cloudflare ZeroTrust
-        secret: CF-Access-Client-Secret TOKEN
+    clients: 
+      - client_id: cloudflare
+        client_name: Cloudflare ZeroTrust
+        client_secret: PUT THE (Digest) PASSPHRASE PREVIOUSLY GENERATED
         public: false
         authorization_policy: two_factor
         pre_configured_consent_duration: '365d'
