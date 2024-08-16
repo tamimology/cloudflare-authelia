@@ -46,6 +46,8 @@ Give the token a name, i.e. "***Authelia***", and set the duration to ***Non-exp
 
 In the terminal, execute the command `docker run authelia/authelia:latest authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986` and take note of the both the *Random Password* and *Digest* outputs.
 
+![hashed secret](/screenshots/authelia/hashed_secret.png)
+
 
 
 ## Setting Up Authentication Methods
