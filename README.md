@@ -1,6 +1,6 @@
 # Cloudflare Tunnel Login Using Self-hosted Authelia
 
-#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.37.5](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2023.10.0](https://github.com/cloudflare/cloudflared)*
+#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.38.10](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2024.8.2](https://github.com/cloudflare/cloudflared)*
 
 
 # Table of Contents
@@ -8,20 +8,21 @@
 ***First, we start with Cloudflare platform***
 
 1. <a href="#generating-service-tokens">Generating Service Tokens</a>
-2. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
-3. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
-4. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
+2. <a href="#generating-hashed-secrets">Generating Hashed Secrets</a>
+3. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
+4. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
+5. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
 
 
 ***Second, we move to Authelia self-hosted***
 
-5. <a href="#generating-secrets-and-openid-issuer-private-key">Generating Secrets and OpenID Issuer Private Key</a>
-6. <a href="#generating-random-alphanumeric-string">Generating Random Alphanumeric String</a>
-7. <a href="#editing-authelia-configuration-file">Editing Authelia Configuration File</a>
+6. <a href="#generating-secrets-and-openid-issuer-private-key">Generating Secrets and OpenID Issuer Private Key</a>
+7. <a href="#generating-random-alphanumeric-string">Generating Random Alphanumeric String</a>
+8. <a href="#editing-authelia-configuration-file">Editing Authelia Configuration File</a>
 
 ***Finally, we test our setup***
 
-8. <a href="#testing-the-integration-setup">Testing The Integration Setup</a>
+9. <a href="#testing-the-integration-setup">Testing The Integration Setup</a>
 
 
 
@@ -37,9 +38,14 @@ From the right hand side, click on **Create Service Token**
 
 Give the token a name, i.e. "***Authelia***", and set the duration to ***Non-expiring*** and click **Generate token**
 
-Now, two *CF-Access-Client* will be generated. **COPY THEM AS THIS IS THE ONLY TIME YOU WILL BE ABLE TO SEE THEM** and have them saved in a safe place for later usage
 
-![token ids](/screenshots/cloudflare/token_ids.png)
+
+## Generating Hashed Secrets
+
+#### This step will be used in a later step as the link where both Authelia and Cloudflare are integrated together.
+
+In the terminal, execute the command `docker run authelia/authelia:latest authelia crypto hash generate pbkdf2 --variant sha512 --random --random.length 72 --random.charset rfc3986` and take note of the both the *Random Password* and *Digest* outputs.
+
 
 
 ## Setting Up Authentication Methods
@@ -62,8 +68,8 @@ In the next window, under the ***Login methods***, click **Add new**, and then C
 
 Considering the URL for Authelia as "***auth.mydomain.com***", then in each field that follows enter:
 
-2. ***CF-Access-Client-Id*** generated in the previous step
-4. ***CF-Access-Client-Secret*** generate in the previous step
+2. ***cloudflare***
+4. The ***Random Password*** generate in the previous step
 5. https://***auth.mydomain.com***/api/oidc/authorization
 6. https://***auth.mydomain.com***/api/oidc/token
 7. https://***auth.mydomain.com***/jwks.json
@@ -177,14 +183,18 @@ Considering the team's name in Clkoudflare is named as "***myteam***", then, we 
 identity_providers:
   oidc:
     hmac_secret: **PUT THE GENERATED RSA STRING FROM THE PREVIOUS STEP**
-    issuer_private_key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      **HERE GOES WHATEVER IS IN THE _private.pem_ FILE**
-      -----END RSA PRIVATE KEY-----
-    access_token_lifespan: 1h
-    authorize_code_lifespan: 1m
-    id_token_lifespan: 1h
-    refresh_token_lifespan: 90m
+    jwks:
+      - key_id: 'example'
+        algorithm: 'RS256'
+        use: 'sig'
+        key: | # docker run -u 1036:100 -v /volume1/docker:/keys authelia/authelia:latest authelia crypto pair rsa generate --bits 4096 --directory /keys
+          -----BEGIN RSA PRIVATE KEY-----
+          **HERE GOES WHATEVER IS IN THE _private.pem_ FILE**
+          -----END RSA PRIVATE KEY-----
+    lifespans.access_token: 1h
+    lifespans.authorize_code: 1m
+    lifespans.id_token: 1h
+    lifespans.refresh_token: 90m
     enable_client_debug_messages: false
     enforce_pkce: public_clients_only
     cors:
@@ -196,10 +206,11 @@ identity_providers:
       allowed_origins:
         - "*"
       allowed_origins_from_client_redirect_uris: false
+
     clients:
-      - id: **PUT THE _CF-Access-Client-Id_ TOKEN PREVIOUSLY GENERATED **
-        description: Cloudflare ZeroTrust
-        secret: 8**PUT THE _CF-Access-Client-Secret_ TOKEN PREVIOUSLY GENERATED **
+      - client_id: cloudflare
+        client_name: Cloudflare ZeroTrust
+        client_secret: **PUT THE _Digest_ PASSPHRASE PREVIOUSLY GENERATED **
         public: false
         authorization_policy: two_factor
         pre_configured_consent_duration: '365d'
@@ -209,7 +220,7 @@ identity_providers:
           - openid
           - profile
           - email
-        userinfo_signing_algorithm: none
+        userinfo_signed_response_alg: none
 ```
 
 Now, restart Authelia container and make sure that no errors are in the logs. If this is successful, it is time now to test the integration from **Cloudflare**.
