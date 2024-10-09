@@ -251,7 +251,7 @@ A new file will be generated named **_key.pem_**, copy the contents of this file
 
 #### This is the last step to make sure that nothing wrong is done during the setup, and *Authelia* is successfully integrated into *Cloudflare* as a 2FA platform
 
-Now to make sure that, so far, everything is set up correctly, open the [Cloudflare Zero Trust](https://dash.teams.cloudflare.com/) page. Click on **Settings**, then **Authentication**. Under the ***Login methods*** you will see the previously added "*OpenID Connect Authelia*" method. Click on 
+Now to make sure that, so far, everything is set up correctly, open the [Cloudflare Zero Trust](https://one.dash.cloudflare.com/) page. Click on **Settings**, then **Authentication**. Under the ***Login methods*** you will see the previously added "*OpenID Connect Authelia*" method. Click on 
 **Test** beside it.
 
 ![authentication test](/screenshots/cloudflare/authentication_test.png)
