@@ -125,7 +125,7 @@ identity_providers:
       - key_id: 'example'
         algorithm: 'RS256'
         use: 'sig'
-        key: | # docker run -u 1036:100 -v /volume1/docker:/keys authelia/authelia:latest authelia crypto pair rsa generate --bits 4096 --directory /keys
+        key: |
           -----BEGIN RSA PRIVATE KEY-----
           private.pem CONTENTS TO BE INSERTED HERE
           -----END RSA PRIVATE KEY-----
