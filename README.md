@@ -7,36 +7,21 @@
 
 ***First, we start with Cloudflare platform***
 
-1. <a href="#generating-service-tokens">Generating Service Tokens</a>
-2. <a href="#generating-hashed-secrets">Generating Hashed Secrets</a>
-3. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
-4. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
-5. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
+1. <a href="#generating-hashed-secrets">Generating Hashed Secrets</a>
+2. <a href="#setting-up-authentication-methods">Setting Up Authentication Methods</a>
+3. <a href="#adding-applications-rules-and-policies">Adding Applications Rules and Policies</a>
+4. <a href="#adding-firewall-rules">Adding Firewall Rules</a>
 
 
 ***Second, we move to Authelia self-hosted***
 
-6. <a href="#generating-secrets-and-openid-issuer-private-key">Generating Secrets and OpenID Issuer Private Key</a>
-7. <a href="#generating-random-alphanumeric-string">Generating Random Alphanumeric String</a>
-8. <a href="#editing-authelia-configuration-file">Editing Authelia Configuration File</a>
+5. <a href="#generating-secrets-and-openid-issuer-private-key">Generating Secrets and OpenID Issuer Private Key</a>
+6. <a href="#generating-random-alphanumeric-string">Generating Random Alphanumeric String</a>
+7. <a href="#editing-authelia-configuration-file">Editing Authelia Configuration File</a>
 
 ***Finally, we test our setup***
 
-9. <a href="#testing-the-integration-setup">Testing The Integration Setup</a>
-
-
-
-## Generating Service Tokens
-
-#### This step will be used in a later step as the link where both Authelia and Cloudflare are integrated.
-
-To begin with, open the [Cloudflare Zero Trust](https://one.dash.cloudflare.com/) page. Then from the left-hand list, expand the **Access** drop-down, and select the **Service Auth** from that drop-down list.
-
-From the right-hand side, click on **Create Service Token**
-
-![service token](/screenshots/cloudflare/service_token.png)
-
-Give the token a name, i.e. "***Authelia***", and set the duration to ***Non-expiring*** and click **Generate token**
+8. <a href="#testing-the-integration-setup">Testing The Integration Setup</a>
 
 
 
