@@ -1,7 +1,8 @@
 # Cloudflare Tunnel Login Using Self-hosted Authelia
 
-#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.38.16](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2024.9.1](https://github.com/cloudflare/cloudflared)*
+#### **NOTE:** *WHEN WRITING THIS GUIDE, IT WAS BASED ON [AUTHELIA v4.38.19](https://github.com/authelia/authelia) AND [CLOUDFLARE TUNNEL v2026.3.0](https://github.com/cloudflare/cloudflared)*
 
+#### For some reason, I was not able to have later Aushtelia versions successfully integrated with Cloudflare. Anyone who can help, feel more than welcome doing so.
 
 # Table of Contents
 
@@ -39,12 +40,12 @@ In the terminal, execute the command `docker run authelia/authelia:latest authel
 
 #### This step is where we add Authelia as a 2FA service into the Cloudflare platform.
 
-On the same page, you are now, and on the left side, click on **Settings**, then choose **Authentication**
+Open Cloudflare's ***Zero Trust*** page from the left side menu, or simply click [here](https://one.dash.cloudflare.com/). Once opened, navigate to ***Integrations --> Identity Providers***
 
 ![authentication](/screenshots/cloudflare/authentication.png)
 
 
-In the next window, under the ***Login methods***, click **Add new**, and then Choose the **OpenID Connect** from the available options
+Now click **Add an identity provider**, and then Choose the **OpenID Connect** from the available options
 
 ![new authentication](/screenshots/cloudflare/new_authentication.png)
 
@@ -67,19 +68,11 @@ Click on **Save**
 
 ![openid connect](/screenshots/cloudflare/openid_connect.png)
 
-
-Before leaving the **Cloudflare** platform and moving to the **Authelia** part, take note of the **Cloudflare** ***team*** name, and have it saved somewhere safe for later use. To do that, click on **Settings** on the left side list, then choose **Custom Pages**. On the top right side, you will see the team name in the format *myteam.cloudflareaccess.com*. So, in this case, it will be only ***myteam**
-
-
-
-![cf team](/screenshots/cloudflare/cf-team.png)
-
-
 ## Adding Applications Rules and Policies
 
 #### This is where you define for each subdomain if Authelia is needed to be an intermediate gate between the Cloudflare Tunnel and the final URL requested
 
-On the left side, click on **Access**, then choose **Applications**, then click on **Add an application** and choose the **Self-hosted** option.
+On the left side, click on **Access controls**, then choose **Applications**, then click on **Add an application** and choose the **Self -hosted** option.
 
 ![add application](/screenshots/cloudflare/add_application.png)
 
@@ -93,17 +86,25 @@ In the **Setup** screen, leave everything as is, and click on **Add application*
 
 ![application access](/screenshots/cloudflare/application_access.png)
 
+
+Before leaving the **Cloudflare Zero Trust** platform and moving to the **Authelia** part, take note of the **Cloudflare** ***team*** name, and have it saved somewhere safe for later use. To do that, click on **Settings** on the left side list, then choose **Team Name** from the top tabs, then you will see the team name under **Team Name** or below that in the format *myteam.cloudflareaccess.com*. So, in this case, it will be only ***myteam**
+
+
+
+![cf team](/screenshots/cloudflare/cf-team.png)
+
+
 ## Adding Firewall Rules
 
 #### What we need now is to allow specific countries to access the domain, and block all other countries to avoid external attacks.
 
-In the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **Websites** on the top left side, then choose the _domain name_ that needs to have the firewall rules added to. 
+In the [Cloudfare dashboard](https://dash.cloudflare.com/), click on the **Domains** on the top left side, then choose the _three dots_ next to that domain name and click on ***Configure Web pplication Firewall***, or alternativly, choose the _domain name_ that needs to have the firewall rules added to. 
 
 
 ![website_domain](/screenshots/cloudflare/website_domain.png)
 
 
-From that screen, **Security** from the *Home* screen, then choose **WAF**. On the right side, click on ***Create rule***.
+From that screen, **Security** from the *Home* screen, then choose **Security rules**. On the right side, click on ***Create rule*** and choose **Custom Rule**.
 
 
 ![waf](/screenshots/cloudflare/waf.png)
@@ -112,6 +113,8 @@ Follow the steps below:
 1. Enter the desired Rule Name
 2. Choose *"Continent"* from the **Field** list, **Operator** to be *"equals"*, and then choose the first option in the **Value** list. Do this step for all items in the **"Value"** list by choosing the *"Or"* next to each rule line
 3. Choose the *"Block"* from **action**
+4. Choose the *"First"* from **order** 
+#### NOTE: This depends on the logic you want the Firewall to follow, in my example, blocking attackers should go first before having any access to the domain.
 
 ![waf_rule](/screenshots/cloudflare/waf-rule.png)
 
@@ -122,7 +125,7 @@ Now, you need to unblock your country (or more than one if needed).
 
 After you have added all continents as _Block_, check your desired country is in which continent, i.e. Cyprus, which is in Europe. You go to the Europe option you have added, and then click on **And**, then choose *"Country"* from the **Field** list, **Operator** to be *"does not equals"*, and then choose *"Cyprus"* from the **Value** list.
 
-Click on **Deploy firewall rule** at the bottom of the page
+Click on **Deploy** at the bottom of the page
 
 Your final result should look like below
 
